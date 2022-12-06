@@ -1,0 +1,120 @@
+'2022-11-20 00:00:00'
+'2022-12-05 23:59:59'
+#################################
+#### Retrieving all accounts ####
+#################################
+'Retrieving page 1 from a total of 34 page(s)'
+'Retrieving page 2 from a total of 34 page(s)'
+'Retrieving page 3 from a total of 34 page(s)'
+'Retrieving page 4 from a total of 34 page(s)'
+'Retrieving page 5 from a total of 34 page(s)'
+'Retrieving page 6 from a total of 34 page(s)'
+'Retrieving page 7 from a total of 34 page(s)'
+'Retrieving page 8 from a total of 34 page(s)'
+'Retrieving page 9 from a total of 34 page(s)'
+'Retrieving page 10 from a total of 34 page(s)'
+'Retrieving page 11 from a total of 34 page(s)'
+'Retrieving page 12 from a total of 34 page(s)'
+'Retrieving page 13 from a total of 34 page(s)'
+'Retrieving page 14 from a total of 34 page(s)'
+'Retrieving page 15 from a total of 34 page(s)'
+'Retrieving page 16 from a total of 34 page(s)'
+'Retrieving page 17 from a total of 34 page(s)'
+'Retrieving page 18 from a total of 34 page(s)'
+'Retrieving page 19 from a total of 34 page(s)'
+'Retrieving page 20 from a total of 34 page(s)'
+'Retrieving page 21 from a total of 34 page(s)'
+'Retrieving page 22 from a total of 34 page(s)'
+'Retrieving page 23 from a total of 34 page(s)'
+'Retrieving page 24 from a total of 34 page(s)'
+'Retrieving page 25 from a total of 34 page(s)'
+'Retrieving page 26 from a total of 34 page(s)'
+'Retrieving page 27 from a total of 34 page(s)'
+'Retrieving page 28 from a total of 34 page(s)'
+'Retrieving page 29 from a total of 34 page(s)'
+'Retrieving page 30 from a total of 34 page(s)'
+'Retrieving page 31 from a total of 34 page(s)'
+'Retrieving page 32 from a total of 34 page(s)'
+'Retrieving page 33 from a total of 34 page(s)'
+'Retrieving page 34 from a total of 34 page(s)'
+#####################################
+#### Retrieving all applications ####
+#####################################
+'Retrieving page 1 from a total of 34 page(s)'
+'Retrieving page 2 from a total of 34 page(s)'
+'Retrieving page 3 from a total of 34 page(s)'
+'Retrieving page 4 from a total of 34 page(s)'
+'Retrieving page 5 from a total of 34 page(s)'
+'Retrieving page 6 from a total of 34 page(s)'
+'Retrieving page 7 from a total of 34 page(s)'
+'Retrieving page 8 from a total of 34 page(s)'
+'Retrieving page 9 from a total of 34 page(s)'
+'Retrieving page 10 from a total of 34 page(s)'
+'Retrieving page 11 from a total of 34 page(s)'
+'Retrieving page 12 from a total of 34 page(s)'
+'Retrieving page 13 from a total of 34 page(s)'
+'Retrieving page 14 from a total of 34 page(s)'
+'Retrieving page 15 from a total of 34 page(s)'
+'Retrieving page 16 from a total of 34 page(s)'
+'Retrieving page 17 from a total of 34 page(s)'
+'Retrieving page 18 from a total of 34 page(s)'
+'Retrieving page 19 from a total of 34 page(s)'
+'Retrieving page 20 from a total of 34 page(s)'
+'Retrieving page 21 from a total of 34 page(s)'
+'Retrieving page 22 from a total of 34 page(s)'
+'Retrieving page 23 from a total of 34 page(s)'
+'Retrieving page 24 from a total of 34 page(s)'
+'Retrieving page 25 from a total of 34 page(s)'
+'Retrieving page 26 from a total of 34 page(s)'
+'Retrieving page 27 from a total of 34 page(s)'
+'Retrieving page 28 from a total of 34 page(s)'
+'Retrieving page 29 from a total of 34 page(s)'
+'Retrieving page 30 from a total of 34 page(s)'
+'Retrieving page 31 from a total of 34 page(s)'
+'Retrieving page 32 from a total of 34 page(s)'
+'Retrieving page 33 from a total of 34 page(s)'
+'Retrieving page 34 from a total of 34 page(s)'
+##############################################
+#### Retrieving all anallytics per APP ID ####
+##############################################
+
+
+##################################
+Retrive metrics for endpoint hits.
+##################################
+#############################################
+Retrive metrics for endpoint stories_volumes.
+#############################################
+###################################################
+Retrive metrics for endpoint autocompletes_volumes.
+###################################################
+###############################################
+Retrive metrics for endpoint coverages_volumes.
+###############################################
+#####################################################
+Retrive metrics for endpoint related_stories_volumes.
+#####################################################
+#################################################
+Retrive metrics for endpoint time_series_volumes.
+#################################################
+############################################
+Retrive metrics for endpoint trends_volumes.
+############################################
+################################################
+Retrive metrics for endpoint histograms_volumes.
+################################################
+##############################################
+Retrive metrics for endpoint clusters_volumes.
+##############################################
+###################################################
+Retrive metrics for endpoint total_stories_volumes.
+###################################################
+############################################
+#### Retrieving all features per APP ID ####
+############################################
+##########################################
+#### Retrieving all Limits per APP ID ####
+##########################################
+15.0
+0
+inf
