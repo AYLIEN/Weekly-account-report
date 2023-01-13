@@ -511,9 +511,10 @@ def main(search_period_type_input="delta"):
     
     #########################################################################################
     # As discussed with Omar removing the time from the date time stamp for columns that are in this format
+    # As rediscussed with Omar on ticket https://aylien.monday.com/boards/2939156063/pulses/3762824650 - changigng the timestamp to show datetime on column 'Application created (Date)' 
     report['Account created (Date)'] = report['Account created (Date)'].apply(lambda x : x.split("T")[0] if(x is not None) else None)
     report['Account last updated (Date)'] = report['Account last updated (Date)'].apply(lambda x : x.split("T")[0] if(x is not None) else None)
-    report['Application created (Date)'] = report['Application created (Date)'].apply(lambda x : x.split("T")[0] if(x is not None) else None)
+    # report['Application created (Date)'] = report['Application created (Date)'].apply(lambda x : x.split("T")[0] if(x is not None) else None)
     report['Application last updated (Date)'] = report['Application last updated (Date)'].apply(lambda x : x.split("T")[0] if(x is not None) else None)
     report['Application first traffic (Date)'] = report['Application first traffic (Date)'].apply(lambda x : x.split("T")[0] if(x is not None) else None)
     report['Usage Data collected from (Timedate)'] = report['Usage Data collected from (Timedate)'].apply(lambda x : x.split("T")[0] if(x is not None) else None)
@@ -577,7 +578,25 @@ def main(search_period_type_input="delta"):
     
     ##########
     ## Select columns 
-    report = report[[
+    # 2023-Jan-13 - Changes based on this ticket https://aylien.monday.com/boards/2939156063/pulses/3762824650
+    # []I moved the Application columns to the left of the Account columns
+    # [] I moved Application Created (Date) to be column A. 
+    # [] if this could include a timestamp it would be great  - full time stamp with hour, e.g. "2023-01-03 10:50:15"
+    # [] I sorted the sheet by column A Application Created (Date) DESC (Z-A) so that the newest applications are on the top
+    
+    report = report[['Application created (Date)',
+                    'Application ID',
+                    'Application name',
+                    'Application days since created',
+                    'Application created in the last 15 days?',
+                    'Application last updated (Date)',
+                    'Application first traffic (Date)',
+                    'Application state',
+                    'Application description',
+                    'Application plan custom (T/F)',
+                    'Application plan default (T/F)',
+                    'Application product',
+                    'Application plan name',
                     # Account fields:
                     'Account ID',
                     'Account created (Date)',
@@ -593,20 +612,7 @@ def main(search_period_type_input="delta"):
                     'Account email domain',
                     'Account username',
                     'Account propose',
-                    # application filds:
-                    'Application ID',
-                    'Application name',
-                    'Application created (Date)',
-                    'Application days since created',
-                    'Application created in the last 15 days?',
-                    'Application last updated (Date)',
-                    'Application first traffic (Date)',
-                    'Application state',
-                    'Application description',
-                    'Application plan custom (T/F)',
-                    'Application plan default (T/F)',
-                    'Application product',
-                    'Application plan name',
+                    # Usage fields analytics
                     'Usage Data collected from (Timedate)',
                     'Usage Data collected to (Timedate)',
                     'Usage Data Duration (Days)',
@@ -725,37 +731,47 @@ def main(search_period_type_input="delta"):
                     'FF customer_ihs',
                     'FF new_v3_entities',
                     'FF external-entity-mapping-duns',
-                    'FF relevance_boosting'
-                    ]]
-
+                    'FF relevance_boosting' ]]
+    
+    ########################
+    ### Sort Values ########
+    ########################
+    
+    report = report.sort_values(by='Application created (Date)', ascending=False)
+    
+    #############################################################################
+    
+    report_final = report
+    report = ""
+    
     ## Save to an excel
-    formats = [{'value':'Account ID', 'cell':'A1' , 'color': 'gray'},
-                {'value':'Account created (Date)', 'cell':'B1' , 'color': 'gray'},
-                {'value':'Account last updated (Date)', 'cell':'C1' , 'color': 'gray'},
-                {'value':'Account state', 'cell':'D1' , 'color': 'gray'},
-                {'value':'Account company name', 'cell':'E1' , 'color': 'gray'},
-                {'value':'Account monthly billing enabled', 'cell':'F1' , 'color': 'gray'},
-                {'value':'account monthly charging enabled', 'cell':'G1' , 'color': 'gray'},
-                {'value':'Account credit card stored', 'cell':'H1' , 'color': 'gray'},
-                {'value':'Account user state', 'cell':'I1' , 'color': 'gray'},
-                {'value':'Account user role', 'cell':'J1' , 'color': 'gray'},
-                {'value':'Account user email', 'cell':'K1' , 'color': 'gray'},
-                {'value':'Account email domain', 'cell':'L1' , 'color': 'gray'},
-                {'value':'Account username', 'cell':'M1' , 'color': 'gray'},
-                {'value':'Account propose', 'cell':'N1' , 'color': 'gray'},
-                {'value':'Application ID', 'cell':'O1' , 'color': 'purple'},
-                {'value':'Application name', 'cell':'P1' , 'color': 'purple'},
-                {'value':'Application created (Date)', 'cell':'Q1' , 'color': 'purple'},
-                {'value':'Application days since created', 'cell':'R1' , 'color': '#006400'},
-                {'value':'Application created in the last 15 days?', 'cell':'S1' , 'color': '#006400'},
-                {'value':'Application last updated (Date)', 'cell':'T1' , 'color': 'purple'},
-                {'value':'Application first traffic (Date)', 'cell':'U1' , 'color': 'purple'},
-                {'value':'Application state', 'cell':'V1' , 'color': 'purple'},
-                {'value':'Application description', 'cell':'W1' , 'color': 'purple'},
-                {'value':'Application plan custom (T/F)', 'cell':'X1' , 'color': '#006400'},
-                {'value':'Application plan default (T/F)', 'cell':'Y1' , 'color': '#006400'},
-                {'value':'Application product', 'cell':'Z1' , 'color': '#006400'},
-                {'value':'Application plan name', 'cell':'AA1' , 'color': 'purple'},
+    formats = [{'value':'Application created (Date)', 'cell':'A1' , 'color': 'purple'},
+                {'value':'Application ID', 'cell':'B1' , 'color': 'purple'},
+                {'value':'Application name', 'cell':'C1' , 'color': 'purple'},
+                {'value':'Application days since created', 'cell':'D1' , 'color': '#006400'},
+                {'value':'Application created in the last 15 days?', 'cell':'E1' , 'color': '#006400'},
+                {'value':'Application last updated (Date)', 'cell':'F1' , 'color': 'purple'},
+                {'value':'Application first traffic (Date)', 'cell':'G1' , 'color': 'purple'},
+                {'value':'Application state', 'cell':'H1' , 'color': 'purple'},
+                {'value':'Application description', 'cell':'I1' , 'color': 'purple'},
+                {'value':'Application plan custom (T/F)', 'cell':'J1' , 'color': '#006400'},
+                {'value':'Application plan default (T/F)', 'cell':'K1' , 'color': '#006400'},
+                {'value':'Application product', 'cell':'L1' , 'color': '#006400'},
+                {'value':'Application plan name', 'cell':'M1' , 'color': 'purple'},
+                {'value':'Account ID', 'cell':'N1' , 'color': 'gray'},
+                {'value':'Account created (Date)', 'cell':'O1' , 'color': 'gray'},
+                {'value':'Account last updated (Date)', 'cell':'P1' , 'color': 'gray'},
+                {'value':'Account state', 'cell':'Q1' , 'color': 'gray'},
+                {'value':'Account company name', 'cell':'R1' , 'color': 'gray'},
+                {'value':'Account monthly billing enabled', 'cell':'S1' , 'color': 'gray'},
+                {'value':'account monthly charging enabled', 'cell':'T1' , 'color': 'gray'},
+                {'value':'Account credit card stored', 'cell':'U1' , 'color': 'gray'},
+                {'value':'Account user state', 'cell':'V1' , 'color': 'gray'},
+                {'value':'Account user role', 'cell':'W1' , 'color': 'gray'},
+                {'value':'Account user email', 'cell':'X1' , 'color': 'gray'},
+                {'value':'Account email domain', 'cell':'Y1' , 'color': 'gray'},
+                {'value':'Account username', 'cell':'Z1' , 'color': 'gray'},
+                {'value':'Account propose', 'cell':'AA1' , 'color': 'gray'},
                 {'value':'Usage Data collected from (Timedate)', 'cell':'AB1' , 'color': '#0000FF'},
                 {'value':'Usage Data collected to (Timedate)', 'cell':'AC1' , 'color': '#0000FF'},
                 {'value':'Usage Data Duration (Days)', 'cell':'AD1' , 'color': '#006400'},
@@ -880,8 +896,8 @@ def main(search_period_type_input="delta"):
         options['strings_to_formulas'] = False
         options['strings_to_urls'] = False
         
-        with pd.ExcelWriter(file_dir + '/reports/' + file_name) as writer:  
-            report.to_excel(writer, sheet_name='Data', index=False, engine='xlsxwriter')
+        with pd.ExcelWriter(file_dir + '/reports/' + file_name) as writer: 
+            report_final.to_excel(writer, sheet_name='Data', index=False, engine='xlsxwriter')
 
         
             workbook  = writer.book
