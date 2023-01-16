@@ -356,7 +356,17 @@ def main(search_period_type_input="delta"):
     
     #####
     # Average hits per day
-    report['average_hits_pe_day'] = report['Hits']/report['Application days since created']
+    average_hits_pe_day_calc = []
+    for index, row in report.iterrows():
+        if row['Application days since created'] == 0:
+            average_hits_pe_day_calc.append( row['Hits']/1  )
+            
+        if row['Application days since created'] >= 1:
+            average_hits_pe_day_calc.append( row['Hits']/row['Application days since created'] )
+            
+    report['average_hits_pe_day'] = average_hits_pe_day_calc
+        
+    # report['average_hits_pe_day'] = report['Hits']/report['Application days since created']
     
     # Round numbers up
     # Fix the issue with accounts with only one hit a day
@@ -364,12 +374,16 @@ def main(search_period_type_input="delta"):
     average_hits_pe_day = []
     
     for index, row in report.iterrows():
-        try:
+        
+        try:                
             average_hits_pe_day.append(math.ceil(row['average_hits_pe_day']))
         except:
+            pprint(row['application_application_id'])
             pprint(row['Hits'])
             pprint(row['Application days since created'])
             pprint(row['average_hits_pe_day'])
+            # Case it fails in the try except loop it will have 0
+            average_hits_pe_day.append(0)
         
     report['average_hits_pe_day'] = average_hits_pe_day
     
@@ -740,9 +754,7 @@ def main(search_period_type_input="delta"):
     report = report.sort_values(by='Application created (Date)', ascending=False)
     
     #############################################################################
-    
-    report_final = report
-    report = ""
+
     
     ## Save to an excel
     formats = [{'value':'Application created (Date)', 'cell':'A1' , 'color': 'purple'},
@@ -897,7 +909,7 @@ def main(search_period_type_input="delta"):
         options['strings_to_urls'] = False
         
         with pd.ExcelWriter(file_dir + '/reports/' + file_name) as writer: 
-            report_final.to_excel(writer, sheet_name='Data', index=False, engine='xlsxwriter')
+            report.to_excel(writer, sheet_name='Data', index=False, engine='xlsxwriter')
 
         
             workbook  = writer.book
