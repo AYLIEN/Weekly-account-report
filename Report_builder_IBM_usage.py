@@ -940,7 +940,7 @@ def main(search_period_type_input="delta"):
     
     if save_to_excel is True:
 
-        file_name = str(datetime.now().strftime('%Y-%m-%d')) + " IBM usage report" + ".xlsx" 
+        file_name = str(datetime.now().strftime('%Y-%m-%d_%H%M%S')) + " IBM usage report" + ".xlsx" 
         
         file_dir = os.path.dirname(os.path.abspath(__file__))
         

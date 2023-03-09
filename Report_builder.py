@@ -334,6 +334,9 @@ def main(search_period_type_input="delta"):
         
         if type(delta_creation) is int and delta_creation> 0:
             application_days_old.append(delta_creation)
+
+        elif type(delta_creation) is int and delta_creation == 0:
+            application_days_old.append(1)
         
         else:
             application_days_old.append(0)  
@@ -354,15 +357,38 @@ def main(search_period_type_input="delta"):
     #  old name: new_application 
     report['Application created in the last 15 days?'] = new_application
     
+    ##### GET Dates
+    min_date = []
+    max_date = []
+    for index, row in report.iterrows():
+        
+        min_date.append(row['analytics_start_datetime'])
+        max_date.append(row['analytics_end_datetime'])
+   
+    min_date_pe = datetime.strptime(min(min_date, default='5999-10-13T23:59:59Z'), '%Y-%m-%dT%H:%M:%SZ')
+    max_date_pe = datetime.strptime(max(max_date, default='1501-10-13T23:59:59Z'), '%Y-%m-%dT%H:%M:%SZ')
+    
+    delta = max_date_pe - min_date_pe
+    delta = delta.days
+
+
+
     #####
     # Average hits per day
     average_hits_pe_day_calc = []
     for index, row in report.iterrows():
-        if row['Application days since created'] == 0:
+        if row['Application days since created'] == 0 and row['Hits'] > 0:
             average_hits_pe_day_calc.append( row['Hits']/1  )
             
-        if row['Application days since created'] >= 1:
+        elif row['Application days since created'] >= 1 and row['Application days since created'] <= 15  and row['Hits'] > 0:
             average_hits_pe_day_calc.append( row['Hits']/row['Application days since created'] )
+
+        elif row['Application days since created'] >= 15 and row['Hits'] > 0:
+            average_hits_pe_day_calc.append( row['Hits']/int(delta) )
+
+        else:
+            average_hits_pe_day_calc.append( 0 )
+
             
     report['average_hits_pe_day'] = average_hits_pe_day_calc
         
@@ -374,7 +400,6 @@ def main(search_period_type_input="delta"):
     average_hits_pe_day = []
     
     for index, row in report.iterrows():
-        
         try:                
             average_hits_pe_day.append(math.ceil(row['average_hits_pe_day']))
         except:
@@ -394,20 +419,7 @@ def main(search_period_type_input="delta"):
     # Delete and rename columns
     #### Remove useless columns
     
-    # Rename the columns with period
-    min_date = []
-    max_date = []
-    for index, row in report.iterrows():
-        
-        min_date.append(row['analytics_start_datetime'])
-        max_date.append(row['analytics_end_datetime'])
-   
-    min_date_pe = datetime.strptime(min(min_date, default='5999-10-13T23:59:59Z'), '%Y-%m-%dT%H:%M:%SZ')
-    max_date_pe = datetime.strptime(max(max_date, default='1501-10-13T23:59:59Z'), '%Y-%m-%dT%H:%M:%SZ')
-    
-    delta = max_date_pe - min_date_pe
-    delta = delta.days
-    
+    # Rename the columns with period    
     day_str = "days"
     if delta >1:
         day_str = "days"
@@ -597,8 +609,8 @@ def main(search_period_type_input="delta"):
     # [] I moved Application Created (Date) to be column A. 
     # [] if this could include a timestamp it would be great  - full time stamp with hour, e.g. "2023-01-03 10:50:15"
     # [] I sorted the sheet by column A Application Created (Date) DESC (Z-A) so that the newest applications are on the top
-    
-    report = report[['Application created (Date)',
+
+    columns = ['Application created (Date)',
                     'Application ID',
                     'Application name',
                     'Application days since created',
@@ -686,21 +698,16 @@ def main(search_period_type_input="delta"):
                     'Trends Volume limit',
                     'Trends Volume limit period',
                     'Trends Volume limit used (%)',
-
-                    "Total Hits",
-                    'Total Hits per day (Average)',
-                    'Total Volume',
-                    'Total Volume per day (Average)',
-
-                    
                     "Total Stories Volume",
                     'Total Stories Volume limit',
                     'Total Stories Volume limit period',
                     'Total Stories Volume Usage stats',
-                    
-                
-                    
-                    
+                    # Total all endpoints
+                    "Total Hits",
+                    'Total Hits per day (Average)',
+                    'Total Volume',
+                    'Total Volume per day (Average)',
+                    # Feature Flags
                     'FF historic_1month',
                     'FF historic_3month',
                     'FF historic_unlimited',
@@ -745,7 +752,15 @@ def main(search_period_type_input="delta"):
                     'FF customer_ihs',
                     'FF new_v3_entities',
                     'FF external-entity-mapping-duns',
-                    'FF relevance_boosting' ]]
+                    'FF relevance_boosting' ]
+    
+    df_columns = report.columns.values.tolist()
+
+    for col in columns:
+        if col  not in df_columns:
+            report[col] = "TBD"
+            
+    report = report[columns]
     
     ########################
     ### Sort Values ########
@@ -843,14 +858,17 @@ def main(search_period_type_input="delta"):
                 {'value':'Trends Volume limit', 'cell':'CF1' , 'color': 'red'},
                 {'value':'Trends Volume limit period', 'cell':'CG1' , 'color': 'red'},
                 {'value':'Trends Volume limit used (%)', 'cell':'CH1' , 'color': 'red'},
-                {'value':'Total Hits', 'cell':'CI1' , 'color': 'navy'},
-                {'value':'Total Hits per day (Average)', 'cell':'CJ1' , 'color': '#006400'},
-                {'value':'Total Volume', 'cell':'CK1' , 'color': 'navy'},
-                {'value':'Total Volume per day (Average)', 'cell':'CL1' , 'color': '#006400'},
-                {'value':'Total Stories Volume', 'cell':'CM1' , 'color': 'navy'},
-                {'value':'Total Stories Volume limit', 'cell':'CN1' , 'color': 'navy'},
-                {'value':'Total Stories Volume limit period', 'cell':'CO1' , 'color': 'navy'},
-                {'value':'Total Stories Volume Usage stats', 'cell':'CP1' , 'color': 'navy'},
+
+                {'value':'Total Stories Volume', 'cell':'CI1' , 'color': 'navy'},
+                {'value':'Total Stories Volume limit', 'cell':'CJ1' , 'color': 'navy'},
+                {'value':'Total Stories Volume limit period', 'cell':'CK1' , 'color': 'navy'},
+                {'value':'Total Stories Volume Usage stats', 'cell':'CL1' , 'color': 'navy'},
+
+                {'value':'Total Hits', 'cell':'CM1' , 'color': 'navy'},
+                {'value':'Total Hits per day (Average)', 'cell':'CN1' , 'color': '#006400'},
+                {'value':'Total Volume', 'cell':'CO1' , 'color': 'navy'},
+                {'value':'Total Volume per day (Average)', 'cell':'CP1' , 'color': '#006400'},
+    
                 {'value':'FF historic_1month', 'cell':'CQ1' , 'color': '#E022E0'},
                 {'value':'FF historic_3month', 'cell':'CR1' , 'color': '#E022E0'},
                 {'value':'FF historic_unlimited', 'cell':'CS1' , 'color': '#E022E0'},
