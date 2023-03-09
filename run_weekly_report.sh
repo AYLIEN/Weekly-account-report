@@ -19,4 +19,4 @@ pip install numpy
 pip install decimal
 pip install xlsxwriter
 pip install math
-/home/angelo/miniconda3/bin/python3 /home/angelo/3Scale_report/main.py >> /home/angelo/3Scale_report/log.txt 
+/home/angelo/miniconda3/bin/python3 /home/angelo/Weekly-account-report/main.py >> /home/angelo/Weekly-account-report/log.txt 
